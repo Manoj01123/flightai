@@ -1,0 +1,8 @@
+-r base.txt
+
+# Agent graph
+langgraph==1.2.9
+langchain-core>=1.4.7
+
+# Vertex AI / Gemini — already included via base.txt (google-cloud-aiplatform==1.74.0)
+# vertexai module is provided by google-cloud-aiplatform; no separate package needed

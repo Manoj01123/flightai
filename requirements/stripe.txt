@@ -1,0 +1,3 @@
+-r base.txt
+
+stripe==11.2.0

@@ -1,0 +1,60 @@
+# Node
+node_modules/
+frontend/dist/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.log
+
+# Secrets — NEVER commit these
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+service-account*.json
+*-credentials.json
+
+# Terraform state
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
+infra/terraform/*.tfplan
+infra/terraform/.terraform.lock.hcl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+ml/notebooks/.ipynb_checkpoints/
+
+# Docker
+*.tar.gz
+
+# ML models and training data (stored in GCS, not git)
+ml/**/*.pkl
+ml/**/*.joblib
+ml/**/*.bin
+ml/data/bts_cache/
+ml/data/*.csv
+ml/data/*.parquet

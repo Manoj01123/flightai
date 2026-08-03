@@ -1,0 +1,29 @@
+[tool.black]
+line-length = 120
+target-version = ["py312"]
+exclude = '''
+/(
+    venv
+    | migrations
+    | infra
+    | frontend
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip_glob = ["venv/*", "migrations/*", "infra/*"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
+ignore_missing_imports = true
+exclude = ["venv", "migrations", "infra"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

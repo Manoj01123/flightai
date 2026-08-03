@@ -1,0 +1,10 @@
+-r base.txt
+
+# SMS
+twilio==9.3.8
+
+# Email
+sendgrid==6.11.0
+
+# Firebase push
+firebase-admin==6.6.0

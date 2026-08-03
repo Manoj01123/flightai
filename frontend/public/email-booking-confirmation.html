@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your FlightAI Booking Confirmation</title>
+</head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#2563eb,#4f46e5);border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;">
+              <p style="margin:0;color:#bfdbfe;font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:600;">FlightAI</p>
+              <h1 style="margin:8px 0 0;color:#ffffff;font-size:26px;font-weight:700;">Booking Confirmed ✓</h1>
+            </td>
+          </tr>
+
+          <!-- Route banner -->
+          <tr>
+            <td style="background:#1e3a8a;padding:20px 40px;text-align:center;">
+              <p style="margin:0;color:#93c5fd;font-size:13px;margin-bottom:6px;">Your flight</p>
+              <p style="margin:0;color:#ffffff;font-size:28px;font-weight:700;letter-spacing:1px;">
+                {{ORIGIN}} &nbsp;→&nbsp; {{DESTINATION}}
+              </p>
+              <p style="margin:8px 0 0;color:#bfdbfe;font-size:14px;">Departing {{DEPARTURE_DATE}}</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background:#ffffff;padding:32px 40px;border-left:1px solid #e2e8f0;border-right:1px solid #e2e8f0;">
+
+              <p style="margin:0 0 24px;font-size:15px;color:#374151;line-height:1.6;">
+                Hi <strong>{{FIRST_NAME}}</strong>, your AI agent found a great deal and your booking is confirmed.
+                Here's everything you need:
+              </p>
+
+              <!-- Details table -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:24px;">
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #e2e8f0;">
+                    <p style="margin:0;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Airline</p>
+                    <p style="margin:4px 0 0;font-size:15px;color:#111827;font-weight:600;">{{AIRLINE}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #e2e8f0;">
+                    <p style="margin:0;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Flight Number</p>
+                    <p style="margin:4px 0 0;font-size:15px;color:#111827;font-weight:600;">{{FLIGHT_NUMBER}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #e2e8f0;">
+                    <p style="margin:0;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Booking Reference (PNR)</p>
+                    <p style="margin:4px 0 0;font-size:22px;color:#2563eb;font-weight:700;letter-spacing:4px;">{{PNR}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;">
+                    <p style="margin:0;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Amount Charged</p>
+                    <p style="margin:4px 0 0;font-size:15px;color:#111827;font-weight:600;">
+                      ${{FARE}} fare + ${{AGENT_FEE}} agent fee = <strong>${{TOTAL}}</strong>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA button -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                <tr>
+                  <td align="center">
+                    <a href="{{BOOKING_URL}}" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;padding:14px 36px;border-radius:12px;font-size:15px;font-weight:600;">
+                      View Booking Details
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+                Save your PNR — you'll need it when checking in. You can also download your receipt from the FlightAI app.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f1f5f9;border-radius:0 0 16px 16px;border:1px solid #e2e8f0;border-top:none;padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 8px;font-size:12px;color:#94a3b8;">
+                Booked by FlightAI Agent on {{BOOKED_AT}} · Powered by Gemini AI
+              </p>
+              <p style="margin:0;font-size:12px;color:#94a3b8;">
+                Questions? Reply to this email or visit
+                <a href="{{APP_URL}}" style="color:#2563eb;">flightai.io</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

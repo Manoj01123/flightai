@@ -1,0 +1,33 @@
+# Exclude everything not needed by Cloud Build (keeps upload small)
+.git
+.gitignore
+.gcloudignore
+
+# Node / frontend build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/.env*
+
+# Python virtualenvs and caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ML training data and notebooks (not needed at runtime)
+ml/
+
+# Local dev files
+docker-compose*.yml
+nginx.dev.conf
+*.log
+*.sqlite
+*.db
+
+# macOS
+.DS_Store

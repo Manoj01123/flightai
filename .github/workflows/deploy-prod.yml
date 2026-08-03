@@ -1,0 +1,71 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag (git SHA) to deploy"
+        required: true
+
+env:
+  REGISTRY: us-central1-docker.pkg.dev
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+
+jobs:
+  deploy-prod:
+    name: Deploy ${{ matrix.service }} to prod
+    runs-on: ubuntu-latest
+    environment: production    # requires manual approval in GitHub
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      matrix:
+        include:
+          - service: user
+            cloud_run_service: user-service
+          - service: wallet
+            cloud_run_service: wallet-service
+          - service: booking
+            cloud_run_service: booking-service
+          - service: mcp-booking
+            cloud_run_service: mcp-booking
+          - service: price-watcher
+            cloud_run_service: price-watcher
+          - service: mcp-prediction
+            cloud_run_service: mcp-prediction
+          - service: mcp-notifier
+            cloud_run_service: mcp-notifier
+          - service: gateway
+            cloud_run_service: gateway
+          - service: orchestrator
+            cloud_run_service: orchestrator
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ matrix.cloud_run_service }}
+          image: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flightai/${{ matrix.service }}:${{ github.event.inputs.image_tag }}
+          region: ${{ env.REGION }}
+
+  deploy-frontend-prod:
+    name: Deploy frontend to prod
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: frontend
+          image: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flightai/frontend:${{ github.event.inputs.image_tag }}
+          region: ${{ env.REGION }}
