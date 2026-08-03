@@ -19,7 +19,6 @@ import Admin from './pages/Admin'
 import Onboarding from './pages/Onboarding'
 import ErrorPage from './pages/ErrorPage'
 import ErrorBoundary from './components/ErrorBoundary'
-import Movies from './pages/Movies'
 import InstallPrompt from './components/InstallPrompt'
 import PushNotificationBanner from './components/PushNotificationBanner'
 
@@ -62,8 +61,6 @@ export default function App() {
           <Route path="/bookings/:id" element={<Protected><BookingDetail /></Protected>} />
           <Route path="/settings" element={<Protected><Settings /></Protected>} />
           <Route path="/admin" element={<Protected><Admin /></Protected>} />
-          <Route path="/movies" element={<Protected><Movies /></Protected>} />
-
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>

@@ -1,12 +1,11 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Plane, Wallet, Map, BookOpen, LayoutDashboard, LogOut, Film, Settings } from 'lucide-react'
+import { Plane, Wallet, Map, BookOpen, LayoutDashboard, LogOut, Settings } from 'lucide-react'
 
 const links = [
   { to: '/dashboard', label: 'Home',     icon: LayoutDashboard },
   { to: '/routes',    label: 'Routes',   icon: Map },
   { to: '/bookings',  label: 'Bookings', icon: BookOpen },
-  { to: '/movies',    label: 'Movies',   icon: Film },
   { to: '/wallet',    label: 'Wallet',   icon: Wallet },
 ]
 
