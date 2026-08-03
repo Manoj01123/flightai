@@ -2,6 +2,7 @@ import uuid
 from datetime import date, datetime
 from enum import Enum
 
+import sqlalchemy as sa
 from sqlalchemy import String, Boolean, DateTime, Date, func
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -40,6 +41,7 @@ class User(Base):
     gender: Mapped[str | None] = mapped_column(String(10), nullable=True)   # "m" or "f"
     title: Mapped[str | None] = mapped_column(String(10), nullable=True)    # "mr","ms","mrs","miss","dr"
     fcm_token: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    push_subscription: Mapped[str | None] = mapped_column(sa.Text(), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

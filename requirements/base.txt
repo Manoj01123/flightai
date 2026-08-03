@@ -40,6 +40,9 @@ opentelemetry-instrumentation-fastapi==0.50b0
 opentelemetry-instrumentation-httpx==0.50b0
 structlog==24.4.0
 
+# Web Push notifications (VAPID)
+pywebpush==2.0.0
+
 # Utilities
 python-dotenv==1.0.1
 tenacity==9.0.0

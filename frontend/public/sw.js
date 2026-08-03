@@ -1,55 +1,81 @@
-const CACHE = 'flightai-v2'
-const PRECACHE = ['/', '/index.html', '/offline.html']
+const CACHE = 'flightai-v3'
+const PRECACHE = ['/', '/index.html', '/offline.html', '/manifest.json']
 
+// ── Install ───────────────────────────────────────────────────────────────────
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())
   )
 })
 
+// ── Activate ──────────────────────────────────────────────────────────────────
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   )
 })
 
+// ── Fetch (network-first API, cache-first assets) ─────────────────────────────
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return
   const url = new URL(e.request.url)
-  // Network-first for API requests, cache-first for static assets
-  if (url.pathname.startsWith('/v1/')) {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
-    )
-  } else {
-    e.respondWith(
-      caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
-        const clone = res.clone()
-        caches.open(CACHE).then(c => c.put(e.request, clone))
-        return res
-      }).catch(() => caches.match('/offline.html')))
-    )
+  if (url.hostname !== self.location.hostname) return
+
+  if (url.pathname.startsWith('/v1/') || url.hostname.includes('run.app')) {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)))
+    return
   }
+
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if (cached) return cached
+      return fetch(e.request).then(res => {
+        if (res.ok) {
+          const clone = res.clone()
+          caches.open(CACHE).then(c => c.put(e.request, clone))
+        }
+        return res
+      }).catch(() => caches.match('/offline.html'))
+    })
+  )
 })
 
-// FCM push notification handler
+// ── Web Push notifications ────────────────────────────────────────────────────
 self.addEventListener('push', e => {
-  const data = e.data?.json() ?? {}
-  const title = data.notification?.title || 'FlightAI Alert'
+  let payload = {}
+  try { payload = e.data?.json() ?? {} } catch { payload = { title: 'FlightAI', body: e.data?.text() ?? '' } }
+
+  const title   = payload.title ?? 'FlightAI Alert'
   const options = {
-    body: data.notification?.body || 'Your agent has an update.',
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
-    data: data.data || {},
+    body:     payload.body ?? 'Your agent has an update.',
+    icon:     '/icon-192.png',
+    badge:    '/icon-192.png',
+    vibrate:  [200, 100, 200],
+    tag:      payload.tag ?? 'flightai-alert',
+    renotify: true,
+    data:     payload.data ?? {},
+    actions:  payload.actions ?? [],
   }
   e.waitUntil(self.registration.showNotification(title, options))
 })
 
 self.addEventListener('notificationclick', e => {
   e.notification.close()
-  const routeId = e.notification.data?.route_id
-  const url = routeId ? `/routes/${routeId}` : '/'
-  e.waitUntil(clients.openWindow(url))
+  const action = e.action
+  const data   = e.notification.data ?? {}
+  let target   = '/dashboard'
+
+  if (action === 'dismiss') return
+  if (data.route_id)   target = `/routes/${data.route_id}`
+  else if (data.booking_id) target = `/bookings/${data.booking_id}`
+
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => {
+      const w = cs.find(c => c.url.includes(self.location.origin))
+      if (w) { w.focus(); return w.navigate(target) }
+      return clients.openWindow(target)
+    })
+  )
 })

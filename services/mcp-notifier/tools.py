@@ -143,6 +143,43 @@ async def send_confirm_link(
     return {"confirm_url": confirm_url, "expires_at": link_result["expires_at"], **results}
 
 
+async def send_web_push(user_id: str, title: str, body: str, data: dict | None = None) -> dict:
+    """Send a Web Push notification to a user's subscribed browser/PWA."""
+    from ..shared.database import AsyncSessionLocal
+    from ..shared.settings import settings
+    from ..user.models import User
+    from sqlalchemy import select
+    import json
+
+    vapid_private = getattr(settings, "vapid_private_key", None)
+    vapid_public  = getattr(settings, "vapid_public_key",  None)
+    if not vapid_private or not vapid_public:
+        logger.warning("VAPID keys not configured, skipping web push")
+        return {"sent": False, "reason": "vapid_not_configured"}
+
+    async with AsyncSessionLocal() as db:
+        result = await db.execute(select(User).where(User.id == user_id))
+        user = result.scalar_one_or_none()
+        if not user or not user.push_subscription:
+            return {"sent": False, "reason": "no_subscription"}
+        sub_info = json.loads(user.push_subscription)
+
+    try:
+        from pywebpush import webpush, WebPushException
+        payload = json.dumps({"title": title, "body": body, "data": data or {}})
+        webpush(
+            subscription_info=sub_info,
+            data=payload,
+            vapid_private_key=vapid_private,
+            vapid_claims={"sub": "mailto:admin@flightai.app"},
+        )
+        logger.info("web push sent", user_id=user_id)
+        return {"sent": True}
+    except Exception as e:
+        logger.error("web push failed", user_id=user_id, error=str(e))
+        return {"sent": False, "error": str(e)}
+
+
 async def send_booking_confirmation(
     booking_id: str,
     user_id: str,

@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 from ..shared.logging import configure_logging, logger
 from ..shared.settings import settings
-from .router import router, me_router, users_router, admin_router
+from .router import router, me_router, users_router, admin_router, notifications_router
 
 
 @asynccontextmanager
@@ -28,6 +28,7 @@ app.include_router(router, prefix="/v1")
 app.include_router(me_router, prefix="/v1")
 app.include_router(users_router, prefix="/v1")
 app.include_router(admin_router, prefix="/v1")
+app.include_router(notifications_router, prefix="/v1")
 
 
 @app.get("/health")

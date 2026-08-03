@@ -111,6 +111,31 @@ async def update_users_me(
     return UserResponse.model_validate(current_user)
 
 
+# ── Push notification subscription ──────────────────────────────────────────────
+notifications_router = APIRouter(prefix="/notifications", tags=["notifications"])
+
+@notifications_router.post("/push-subscribe", status_code=204)
+async def push_subscribe(
+    body: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    import json
+    current_user.push_subscription = json.dumps(body)
+    current_user.push_notifications = True
+    await db.flush()
+
+
+@notifications_router.delete("/push-subscribe", status_code=204)
+async def push_unsubscribe(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    current_user.push_subscription = None
+    current_user.push_notifications = False
+    await db.flush()
+
+
 # Admin endpoints
 @admin_router.get("/users", response_model=list[UserResponse])
 async def admin_list_users(

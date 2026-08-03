@@ -19,12 +19,17 @@ import Admin from './pages/Admin'
 import Onboarding from './pages/Onboarding'
 import ErrorPage from './pages/ErrorPage'
 import ErrorBoundary from './components/ErrorBoundary'
+import Movies from './pages/Movies'
+import InstallPrompt from './components/InstallPrompt'
+import PushNotificationBanner from './components/PushNotificationBanner'
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main>{children}</main>
+      <PushNotificationBanner />
+      <main className="pb-16 md:pb-0">{children}</main>
+      <InstallPrompt />
     </div>
   )
 }
@@ -57,6 +62,7 @@ export default function App() {
           <Route path="/bookings/:id" element={<Protected><BookingDetail /></Protected>} />
           <Route path="/settings" element={<Protected><Settings /></Protected>} />
           <Route path="/admin" element={<Protected><Admin /></Protected>} />
+          <Route path="/movies" element={<Protected><Movies /></Protected>} />
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
