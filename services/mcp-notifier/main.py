@@ -13,6 +13,7 @@ from .tools import (
     gen_confirm_link,
     send_confirm_link,
     send_booking_confirmation,
+    send_web_push,
 )
 
 
@@ -128,6 +129,23 @@ async def tool_send_booking_confirmation(body: SendBookingConfirmationRequest):
         to_email=body.to_email,
         origin=body.origin,
         destination=body.destination,
+    )
+
+
+class SendWebPushRequest(BaseModel):
+    user_id: str
+    title: str
+    body: str
+    data: dict = {}
+
+
+@app.post("/tools/send_web_push")
+async def tool_send_web_push(body: SendWebPushRequest):
+    return await send_web_push(
+        user_id=body.user_id,
+        title=body.title,
+        body=body.body,
+        data=body.data,
     )
 
 

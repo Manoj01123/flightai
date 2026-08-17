@@ -48,8 +48,11 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile top bar */}
-      <nav className="md:hidden bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+      {/* Mobile top bar — sits below the iOS status bar via safe-area-inset-top */}
+      <nav
+        className="md:hidden bg-white border-b border-gray-100 px-4 flex items-center justify-between sticky top-0 z-50"
+        style={{ paddingTop: 'max(12px, var(--sat))', paddingBottom: '12px' }}
+      >
         <Link to="/dashboard" className="flex items-center gap-2 font-bold text-blue-600">
           <Plane className="w-5 h-5" />
           FlightAI
@@ -64,14 +67,17 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile bottom tab bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pb-safe">
+      {/* Mobile bottom tab bar — sits above the iOS home indicator */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200"
+        style={{ paddingBottom: 'var(--sab)' }}
+      >
         <div className="flex items-stretch">
           {links.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
               to={to}
-              className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors
+              className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors relative
                 ${isActive(to) ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
             >
               <Icon className={`w-5 h-5 ${isActive(to) ? 'stroke-[2.5]' : 'stroke-[1.5]'}`} />

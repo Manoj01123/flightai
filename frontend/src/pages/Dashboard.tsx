@@ -44,43 +44,49 @@ export default function Dashboard() {
   const totalBookings = bookings.filter(b => b.status === 'confirmed').length
 
   const confirmedRouteIds = new Set(bookings.filter(b => b.status === 'confirmed').map(b => b.route_id))
+  const pendingBookings = bookings.filter(b => b.status === 'pending')
   const modeAPendingRoutes = routes.filter(r =>
-    r.booking_mode === 'A' &&
     r.status === 'active' &&
     !confirmedRouteIds.has(r.id) &&
-    logs.some(l => l.route_id === r.id && (l.action === 'buy' || l.action === 'booked'))
+    pendingBookings.some(b => b.route_id === r.id)
   )
 
   const recentTransactions = wallet?.transactions?.slice(0, 4) || []
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user?.first_name} 👋</h1>
-        <p className="text-gray-500 mt-1">Your AI agent is watching your routes 24/7</p>
+    <div className="max-w-6xl mx-auto px-4 py-4 md:px-6 md:py-8">
+      <div className="mb-4 md:mb-8">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">Welcome back, {user?.first_name} 👋</h1>
+        <p className="text-gray-500 text-sm mt-0.5">Your AI agent is watching your routes 24/7</p>
       </div>
 
       {/* Mode A pending confirmation alerts */}
       {modeAPendingRoutes.length > 0 && (
         <div className="mb-6 space-y-2">
-          {modeAPendingRoutes.map(r => (
-            <div key={r.id} className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-5 py-4">
-              <BellRing className="w-5 h-5 text-amber-600 shrink-0" />
-              <div className="flex-1">
-                <p className="font-semibold text-amber-900 text-sm">Deal found! {r.origin} → {r.destination}</p>
-                <p className="text-xs text-amber-700 mt-0.5">The AI agent found a price at or below your target. Confirm to book it now.</p>
+          {modeAPendingRoutes.map(r => {
+            const pb = pendingBookings.find(b => b.route_id === r.id)
+            return (
+              <div key={r.id} className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-5 py-4">
+                <BellRing className="w-5 h-5 text-green-600 shrink-0" />
+                <div className="flex-1">
+                  <p className="font-semibold text-green-900 text-sm">Deal found! {r.origin} → {r.destination}</p>
+                  <p className="text-xs text-green-700 mt-0.5">
+                    {pb ? `$${parseFloat(pb.price).toFixed(2)} · ` : ''}
+                    Tap to pay with Apple Pay and confirm your seat.
+                  </p>
+                </div>
+                <Link to={pb ? `/bookings/${pb.id}/pay` : `/routes/${r.id}`}
+                  className="shrink-0 bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                  Pay Now
+                </Link>
               </div>
-              <Link to={`/routes/${r.id}`}
-                className="shrink-0 bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors">
-                Review &amp; Confirm
-              </Link>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         <StatCard icon={Wallet} label="Wallet Balance" value={wallet ? `$${parseFloat(wallet.balance).toFixed(2)}` : '—'} color="blue" />
         <StatCard icon={Map} label="Active Routes" value={String(activeRoutes)} color="indigo" />
         <StatCard icon={BookOpen} label="Bookings Made" value={String(totalBookings)} color="green" />
@@ -126,7 +132,7 @@ export default function Dashboard() {
                     {l.action.toUpperCase()}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-700 truncate">{l.reasoning || 'Agent evaluated price data'}</p>
+                    <p className="text-sm text-gray-700 leading-snug" style={{display:'-webkit-box',WebkitLineClamp:3,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{l.reasoning || 'Agent evaluated price data'}</p>
                     <p className="text-xs text-gray-400 mt-0.5">ML Score: {l.ml_score?.toFixed(0)}% · {new Date(l.created_at).toLocaleDateString()}</p>
                   </div>
                 </div>
@@ -175,12 +181,12 @@ function StatCard({ icon: Icon, label, value, color }: { icon: any; label: strin
     purple: 'bg-purple-50 text-purple-600',
   }
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${colors[color]}`}>
-        <Icon className="w-5 h-5" />
+    <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2 ${colors[color]}`}>
+        <Icon className="w-4 h-4" />
       </div>
-      <div className="text-2xl font-bold text-gray-900">{value}</div>
-      <div className="text-sm text-gray-500 mt-0.5">{label}</div>
+      <div className="text-xl font-bold text-gray-900">{value}</div>
+      <div className="text-xs text-gray-500 mt-0.5 leading-tight">{label}</div>
     </div>
   )
 }

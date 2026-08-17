@@ -52,10 +52,21 @@ export const getPriceSnapshots = (routeId: string) =>
   api.get(`/v1/routes/${routeId}/snapshots`)
 
 // ── Bookings ──────────────────────────────────────────────────────────────────
-export const getBookings = () => api.get('/v1/bookings')
+export const getBookings = (routeId?: string) =>
+  api.get('/v1/bookings', { params: routeId ? { route_id: routeId } : {} })
 export const getBooking = (id: string) => api.get(`/v1/bookings/${id}`)
 export const confirmBooking = (token: string) =>
   api.post(`/v1/bookings/confirm/${token}`)
+export const createPaymentIntent = (bookingId: string) =>
+  api.post(`/v1/bookings/${bookingId}/payment-intent`)
+export const payBooking = (bookingId: string, paymentIntentId: string) =>
+  api.post(`/v1/bookings/${bookingId}/pay`, { payment_intent_id: paymentIntentId })
+
+// ── Flight search ─────────────────────────────────────────────────────────────
+export const searchFlights = (params: {
+  origin: string; destination: string; date: string
+  adults?: number; cabin_class?: string; max_connections?: number
+}) => api.get('/v1/flights/search', { params })
 
 // ── Agent logs ────────────────────────────────────────────────────────────────
 export const getAgentLogs = (routeId?: string) =>

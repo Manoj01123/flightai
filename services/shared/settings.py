@@ -38,6 +38,10 @@ class Settings(BaseSettings):
     sendgrid_api_key: str = ""
     sendgrid_from_email: str = "noreply@flightai.io"
 
+    # Web Push (VAPID)
+    vapid_private_key: str = ""
+    vapid_public_key: str = ""
+
     # Redis
     redis_url: str = "redis://localhost:6379/0"
 

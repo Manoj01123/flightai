@@ -71,7 +71,8 @@ class PriceWatcherScheduler:
                 adults=route.adults,
                 cabin_class=route.cabin_class,
             )
-            result = duffel_client.extract_best_price(offers)
+            max_conn = getattr(route, 'max_connections', None)
+            result = duffel_client.extract_best_price(offers, max_connections=max_conn)
             if result is None:
                 logger.warning("no offers returned", route_id=route.id)
                 return

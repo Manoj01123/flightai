@@ -33,6 +33,7 @@ ROUTES = [
     ("/v1/wallet",         WALLET_URL),
     ("/v1/routes",         BOOKING_URL),
     ("/v1/bookings",       BOOKING_URL),
+    ("/v1/flights",        BOOKING_URL),
     ("/v1/agent",          ORCHESTRATOR_URL),
 ]
 

@@ -4,15 +4,6 @@ import { useAuth } from '../context/AuthContext'
 import { Plane, Zap } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-const DEMO_USER = {
-  id: 'demo-1',
-  email: 'demo@flightai.io',
-  first_name: 'Manoj',
-  last_name: 'Rayana',
-  sms_notifications: true,
-  email_notifications: true,
-}
-
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -33,12 +24,6 @@ export default function Login() {
     }
   }
 
-  const enterDemoMode = () => {
-    localStorage.setItem('jwt_token', 'demo-token')
-    localStorage.setItem('jwt_user', JSON.stringify(DEMO_USER))
-    window.location.href = '/dashboard'
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
@@ -47,20 +32,16 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-gray-900">FlightAI</h1>
         </div>
 
-        {/* Demo mode banner */}
+        {/* Quick demo login */}
         <button
-          onClick={enterDemoMode}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity mb-6"
+          type="button"
+          onClick={() => { setEmail('demo@flightai.dev'); setPassword('Demo1234'); }}
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity mb-3"
         >
           <Zap className="w-4 h-4" />
-          Enter Demo Mode (no backend needed)
+          Fill demo credentials
         </button>
-
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-xs text-gray-400">or sign in with account</span>
-          <div className="flex-1 h-px bg-gray-200" />
-        </div>
+        <p className="text-center text-xs text-gray-400 mb-4">demo@flightai.dev · Demo1234</p>
 
         <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Sign in</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

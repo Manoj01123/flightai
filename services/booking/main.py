@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from ..shared.logging import configure_logging, logger
 from ..shared.settings import settings
-from .router import routes_router, bookings_router, admin_bookings_router
+from .router import routes_router, bookings_router, flights_router, admin_bookings_router
 
 
 @asynccontextmanager
@@ -25,6 +25,7 @@ app = FastAPI(
 
 app.include_router(routes_router, prefix="/v1")
 app.include_router(bookings_router, prefix="/v1")
+app.include_router(flights_router, prefix="/v1")
 app.include_router(admin_bookings_router, prefix="/v1")
 
 

@@ -1,4 +1,4 @@
-const CACHE = 'flightai-v3'
+const CACHE = 'flightai-v4'
 const PRECACHE = ['/', '/index.html', '/offline.html', '/manifest.json']
 
 // ── Install ───────────────────────────────────────────────────────────────────
@@ -68,8 +68,8 @@ self.addEventListener('notificationclick', e => {
   let target   = '/dashboard'
 
   if (action === 'dismiss') return
-  if (data.route_id)   target = `/routes/${data.route_id}`
-  else if (data.booking_id) target = `/bookings/${data.booking_id}`
+  if (data.booking_id) target = `/bookings/${data.booking_id}/pay`
+  else if (data.route_id) target = `/routes/${data.route_id}`
 
   e.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => {

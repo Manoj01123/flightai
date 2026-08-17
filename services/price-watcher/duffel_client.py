@@ -70,26 +70,31 @@ class DuffelClient:
         offers_resp.raise_for_status()
         return offers_resp.json().get("data", [])
 
-    def extract_best_price(self, offers: list[dict]) -> tuple[Decimal, str, str] | None:
-        """Return (price, airline_iata, flight_number) from the cheapest offer."""
+    def extract_best_price(self, offers: list[dict], max_connections: int | None = None) -> tuple[Decimal, str, str] | None:
+        """Return (price, airline_name, flight_number) from the cheapest matching offer."""
+        if not offers:
+            return None
+
+        if max_connections is not None:
+            offers = [
+                o for o in offers
+                if sum(len(s.get("segments", [])) - 1 for s in o.get("slices", [])) <= max_connections
+            ]
         if not offers:
             return None
 
         best = min(offers, key=lambda o: float(o["total_amount"]))
-
         price = Decimal(str(best["total_amount"]))
 
-        # Duffel: owner is the validating carrier
-        airline = best.get("owner", {}).get("iata_code", "?")
-
-        # First segment of first slice
         slices = best.get("slices", [])
         if slices and slices[0].get("segments"):
             seg = slices[0]["segments"][0]
-            carrier = seg.get("marketing_carrier", {}).get("iata_code", "")
+            airline = seg.get("operating_carrier", {}).get("name") or best.get("owner", {}).get("name", "?")
+            carrier_iata = seg.get("marketing_carrier", {}).get("iata_code", "")
             number = seg.get("marketing_carrier_flight_number", "")
-            flight_number = f"{carrier}{number}"
+            flight_number = f"{carrier_iata}{number}"
         else:
+            airline = best.get("owner", {}).get("name", "?")
             flight_number = "?"
 
         return price, airline, flight_number

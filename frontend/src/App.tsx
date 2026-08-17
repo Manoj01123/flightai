@@ -10,9 +10,11 @@ import Dashboard from './pages/Dashboard'
 import Wallet from './pages/Wallet'
 import RoutesPage from './pages/Routes'
 import NewRoute from './pages/NewRoute'
+import SearchFlights from './pages/SearchFlights'
 import RouteDetail from './pages/RouteDetail'
 import Bookings from './pages/Bookings'
 import BookingDetail from './pages/BookingDetail'
+import BookingPay from './pages/BookingPay'
 import ConfirmBooking from './pages/ConfirmBooking'
 import Settings from './pages/Settings'
 import Admin from './pages/Admin'
@@ -27,7 +29,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <PushNotificationBanner />
-      <main className="pb-16 md:pb-0">{children}</main>
+      <main className="md:pb-0" style={{ paddingBottom: 'calc(4rem + var(--sab))' }}>{children}</main>
       <InstallPrompt />
     </div>
   )
@@ -55,9 +57,11 @@ export default function App() {
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
           <Route path="/wallet" element={<Protected><Wallet /></Protected>} />
           <Route path="/routes" element={<Protected><RoutesPage /></Protected>} />
-          <Route path="/routes/new" element={<Protected><NewRoute /></Protected>} />
+          <Route path="/routes/new" element={<Protected><SearchFlights /></Protected>} />
+          <Route path="/routes/manual" element={<Protected><NewRoute /></Protected>} />
           <Route path="/routes/:id" element={<Protected><RouteDetail /></Protected>} />
           <Route path="/bookings" element={<Protected><Bookings /></Protected>} />
+          <Route path="/bookings/:id/pay" element={<Protected><BookingPay /></Protected>} />
           <Route path="/bookings/:id" element={<Protected><BookingDetail /></Protected>} />
           <Route path="/settings" element={<Protected><Settings /></Protected>} />
           <Route path="/admin" element={<Protected><Admin /></Protected>} />

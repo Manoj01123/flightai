@@ -253,24 +253,36 @@ async def book_node(state: AgentState) -> AgentState:
 
 
 async def notify_node(state: AgentState) -> AgentState:
-    """Node 5: send notification (Mode A: confirm link, Mode B: booking confirmation)."""
+    """Node 5: send push notification for deal found (Mode A) or booking confirmed."""
     try:
-        if state["booking_mode"] == "A" and state["decision"] == "buy":
+        if state["decision"] == "buy":
+            price = state["current_price"]
+            origin = state["origin"]
+            destination = state["destination"]
+            booking_id = state.get("booking_id", "")
             await _call_mcp(
-                f"{MCP_NOTIFIER_URL}/send_confirm_link",
+                f"{MCP_NOTIFIER_URL}/send_web_push",
                 {
-                    "route_id": state["route_id"],
                     "user_id": state["user_id"],
-                    "booking_id": state.get("booking_id", ""),
-                    "price": str(state["current_price"]),
-                    "origin": state["origin"],
-                    "destination": state["destination"],
-                    "airline": state.get("airline", ""),
-                    "to_phone": state.get("user_phone"),
-                    "to_email": state.get("user_email"),
+                    "title": f"Deal found: {origin} → {destination}",
+                    "body": f"${price:.0f} — tap to pay with Apple Pay and lock this price",
+                    "data": {
+                        "booking_id": booking_id,
+                        "route_id": state["route_id"],
+                        "price": str(price),
+                    },
                 },
             )
         elif state["decision"] == "booked":
+            await _call_mcp(
+                f"{MCP_NOTIFIER_URL}/send_web_push",
+                {
+                    "user_id": state["user_id"],
+                    "title": "Booking confirmed!",
+                    "body": f"{state['origin']} → {state['destination']} booked at ${state['current_price']:.0f}",
+                    "data": {"booking_id": state.get("booking_id", ""), "route_id": state["route_id"]},
+                },
+            )
             await _call_mcp(
                 f"{MCP_NOTIFIER_URL}/send_booking_confirmation",
                 {

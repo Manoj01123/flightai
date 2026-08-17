@@ -12,6 +12,7 @@ class CreateRouteRequest(BaseModel):
     booking_mode: str = "A"
     adults: int = 1
     cabin_class: str = "ECONOMY"
+    max_connections: int | None = None
 
     @field_validator("origin", "destination")
     @classmethod

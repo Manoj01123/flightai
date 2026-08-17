@@ -22,6 +22,16 @@
 
     <!-- iOS splash screens (portrait) -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <style>
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+    }
+    body { margin: 0; padding: 0; }
+    #root { min-height: 100dvh; }
+  </style>
   </head>
   <body>
     <div id="root"></div>

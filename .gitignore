@@ -25,6 +25,8 @@ coverage.xml
 .env
 .env.local
 .env.*.local
+frontend/.env.production
+frontend/.env
 *.pem
 *.key
 service-account*.json

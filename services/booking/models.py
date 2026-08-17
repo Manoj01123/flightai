@@ -38,6 +38,7 @@ class Route(Base):
     status: Mapped[str] = mapped_column(String(20), nullable=False, default=RouteStatus.ACTIVE)
     adults: Mapped[int] = mapped_column(default=1)
     cabin_class: Mapped[str] = mapped_column(String(20), default="ECONOMY")
+    max_connections: Mapped[int | None] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
