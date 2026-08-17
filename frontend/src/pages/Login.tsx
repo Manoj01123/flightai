@@ -35,13 +35,13 @@ export default function Login() {
         {/* Quick demo login */}
         <button
           type="button"
-          onClick={() => { setEmail('demo@flightai.dev'); setPassword('Demo1234'); }}
+          onClick={() => { setEmail('demo@flightai.dev'); setPassword('Xpr1ze@Sky26'); }}
           className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity mb-3"
         >
           <Zap className="w-4 h-4" />
           Fill demo credentials
         </button>
-        <p className="text-center text-xs text-gray-400 mb-4">demo@flightai.dev · Demo1234</p>
+        <p className="text-center text-xs text-gray-400 mb-4">demo@flightai.dev · Xpr1ze@Sky26</p>
 
         <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Sign in</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
