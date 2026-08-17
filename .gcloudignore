@@ -6,7 +6,8 @@
 # Node / frontend build artifacts
 frontend/node_modules/
 frontend/dist/
-frontend/.env*
+frontend/.env.local
+frontend/.env.*.local
 
 # Python virtualenvs and caches
 **/__pycache__/
