@@ -1,6 +1,5 @@
 node_modules/
 .git/
-src/
-public/
+dist/
 .DS_Store
 *.log
